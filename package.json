@@ -1,0 +1,50 @@
+{
+  "name": "@faizaanceg/use",
+  "version": "0.1.0",
+  "description": "A tiny library of useful hooks",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-test-coverage test.mts",
+    "prepare": "npm run build",
+    "watch": "tsc -w"
+  },
+  "files": [
+    "dist/**",
+    "LICENSE",
+    "README.md"
+  ],
+  "exports": {
+    "./kv": {
+      "import": "./dist/kv.mjs",
+      "types": "./dist/kv.d.mts"
+    },
+    "./store": {
+      "import": "./dist/store.mjs",
+      "types": "./dist/store.d.mts"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aulisius/use.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aulisius/use/issues"
+  },
+  "peerDependencies": {
+    "@faizaanceg/pandora": ">=2.0.0",
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
+  "homepage": "https://github.com/aulisius/use#readme",
+  "devDependencies": {
+    "@types/node": "22.19.1",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "happy-dom": "20.0.11",
+    "typescript": "5.5.4"
+  }
+}
