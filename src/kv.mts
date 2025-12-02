@@ -39,40 +39,32 @@ export function KVProvider({
 /**
  * React hook to subscribe to a specific key in the KeyValueStore.
  *
- * `useLocalKV` retrieves the current value associated with the provided `key` from the
- * `KeyValueStore` provided via `KVProvider`. It automatically subscribes to changes, ensuring
+ * `useKVWith` retrieves the current value associated with the provided `key` from the
+ * `KeyValueStore`. It automatically subscribes to changes, ensuring
  * the component re-renders whenever the value changes:
  * - Locally within the same application instance.
  * - Across tabs/windows via the `storage` event (if the underlying store supports it).
  *
- * @template T - The expected type of the value stored.
- * @param key - The unique key identifier to retrieve from the store.
- * @param defaultValue - An optional default value to return if the key does not exist or holds no value.
- * @returns The current value associated with the key, or the `defaultValue` (or `null` if neither is present).
- *
- * @throws {Error} If the hook is used outside of a `KVProvider`.
- *
  * @example
  * ```tsx
  * // Basic usage
- * const theme = useLocalKV('theme');
+ * const theme = useKVWith('theme', 'light', KV);
  * ```
  *
  * @example
  * ```tsx
  * // Usage with a default value and type
- * const count = useLocalKV<number>('count', 0);
+ * const count = useKVWith<number>('count', 0, KV);
  * ```
  */
-export function useLocalKV<T = unknown>(
+export function useKVWith<T = unknown>(
   key: string,
-  defaultValue?: T
+  defaultValue?: T,
+  kv?: KeyValueStore
 ): T | null {
-  const kv = React.useContext(KVContext);
-  if (!kv) {
-    throw new Error("useLocalKV must be used within a KVProvider");
-  }
-  const [value, setValue] = React.useState(() => kv.get(key, defaultValue));
+  const [value, setValue] = React.useState(
+    () => kv?.get(key, defaultValue) ?? null
+  );
   React.useEffect(() => {
     function handleStorageChange(event: StorageEvent) {
       if (event.key === key) {
@@ -80,11 +72,39 @@ export function useLocalKV<T = unknown>(
       }
     }
     window.addEventListener("storage", handleStorageChange);
-    const cleanup = kv.subscribe(key, () => setValue(kv.get(key)));
+    const cleanup = kv?.subscribe(key, () => setValue(kv?.get(key)));
     return () => {
       window.removeEventListener("storage", handleStorageChange);
-      cleanup();
+      cleanup?.();
     };
   }, [key]);
   return value;
+}
+
+/**
+ * React hook to subscribe to a specific key in the KeyValueStore.
+ *
+ * `useKV` retrieves the current value associated with the provided `key` from the
+ * `KeyValueStore` provided via `KVProvider`. It automatically subscribes to changes, ensuring
+ * the component re-renders whenever the value changes:
+ * - Locally within the same application instance.
+ 
+ * @throws {Error} If the hook is used outside of a `KVProvider`.
+ *
+ * @example
+ * ```tsx
+ * const theme = useKV('theme');
+ * ```
+ *
+ * @example
+ * ```tsx
+ * const count = useKV<number>('count', 0);
+ * ```
+ */
+export function useKV<T = unknown>(key: string, defaultValue?: T): T | null {
+  const kv = React.useContext(KVContext);
+  if (!kv) {
+    throw new Error("useKV must be used within a KVProvider");
+  }
+  return useKVWith(key, defaultValue, kv);
 }

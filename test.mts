@@ -1,5 +1,5 @@
 import { KeyValueStore } from "@faizaanceg/pandora/kv";
-import { KVProvider, useLocalKV } from "@faizaanceg/use/kv";
+import { KVProvider, useKV } from "@faizaanceg/use/kv";
 import type { Mutation } from "@faizaanceg/use/store";
 import { useStore } from "@faizaanceg/use/store";
 import { Window } from "happy-dom";
@@ -85,7 +85,7 @@ describe("useStore", () => {
 
 describe("useLocalKV", () => {
   function TestComponent() {
-    const value = useLocalKV<string>("test", "hello");
+    const value = useKV<string>("test", "hello");
     return React.createElement(
       "div",
       null,
