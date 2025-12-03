@@ -50,7 +50,7 @@ function Counter() {
 }
 ```
 
-### `useLocalKV`
+### `useKV`
 
 A hook to subscribe to a key in a `KeyValueStore` (from `@faizaanceg/pandora`). It updates the component whenever the key's value changes, even across tabs (if supported by the storage backend).
 
@@ -61,7 +61,7 @@ You must wrap your application (or part of it) in a `KVProvider` to provide the 
 
 ```tsx
 import { KeyValueStore } from "@faizaanceg/pandora/kv";
-import { KVProvider, useLocalKV } from "@faizaanceg/use/kv";
+import { KVProvider, useKV } from "@faizaanceg/use/kv";
 
 // 1. Initialize the KeyValueStore (e.g., using localStorage)
 const store = new KeyValueStore(localStorage);
@@ -77,7 +77,26 @@ function App() {
 function ThemeComponent() {
   // 2. Subscribe to a key. The component re-renders on change.
   // You can provide a default value as the second argument.
-  const theme = useLocalKV<string>("theme", "light");
+  const theme = useKV<string>("theme", "light");
+
+  return <div>Current theme: {theme}</div>;
+}
+```
+
+### `useKVWith`
+
+A hook to subscribe to a key in a `KeyValueStore` by passing the store instance directly. Useful when you cannot use `KVProvider` or need to access a specific store instance.
+
+**Usage:**
+
+```tsx
+import { KeyValueStore } from "@faizaanceg/pandora/kv";
+import { useKVWith } from "@faizaanceg/use/kv";
+
+const store = new KeyValueStore(sessionStorage);
+
+function ThemeComponent() {
+  const theme = useKVWith<string>("theme", "light", store);
 
   return <div>Current theme: {theme}</div>;
 }
