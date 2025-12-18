@@ -2,6 +2,7 @@
   "name": "@faizaanceg/use",
   "version": "0.1.0",
   "description": "A tiny library of useful hooks",
+  "private": false,
   "type": "module",
   "scripts": {
     "build": "tsc",
@@ -29,7 +30,7 @@
     "url": "git+https://github.com/aulisius/use.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Md Faizaan <aulisius7@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/aulisius/use/issues"
